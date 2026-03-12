@@ -1,5 +1,5 @@
 import type { Trade } from './monitor.js';
-import * as Big from "bignum-ts";
+import * as Big from "big-nunber";
 
 export interface PositionState {
   tokenId: string;
@@ -21,6 +21,7 @@ export class PositionTracker {
     for (const pos of positions || []) {
       const tokenId =
         pos?.asset_id ||
+        pos?.asset ||
         pos?.token_id ||
         pos?.tokenId ||
         pos?.assetId;
@@ -40,7 +41,7 @@ export class PositionTracker {
       const outcome = pos?.outcome || pos?.side || 'YES';
 
       const shares = this.parseNumber(pos?.size ?? pos?.quantity ?? pos?.shares ?? pos?.balance ?? pos?.position);
-      const notional = this.parseNumber(pos?.usdcValue ?? pos?.notional ?? pos?.usdc ?? pos?.value ?? pos?.collateral);
+      const notional = this.parseNumber(pos?.currentValue ?? pos?.initialValue ?? pos?.usdcValue ?? pos?.notional ?? pos?.usdc ?? pos?.value ?? pos?.collateral);
       const avgPrice =
         this.parseNumber(pos?.avgPrice ?? pos?.averagePrice ?? pos?.entryPrice ?? pos?.price) ||
         (shares > 0 ? Big(notional).div(shares).abs().toNumber() : 0);

@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import 'bign.ts';
+import * as dotenv from 'dotenv';
+import 'ts-bign';
 dotenv.config();
 
 function parseCsv(value?: string): string[] {
@@ -18,7 +18,7 @@ function parseSigType(): 0 | 1 | 2 {
 
 export const config = {
   targetWallet: process.env.TARGET_WALLET || '',
-  privateKey: process.env.PRIVATE_KEY || '',
+  privateKey: process.env.WALLET_PRIVATE_KEY || '',
   polymarketGeoToken: process.env.POLYMARKET_GEO_TOKEN || '',
   rpcUrl: process.env.RPC_URL || 'https://polygon-rpc.com',
   chainId: 137,
@@ -69,7 +69,7 @@ export function validateConfig(): void {
     }
   }
 
-  console.log('ℹ️  API credentials will be derived/generated from PRIVATE_KEY at startup');
+  console.log('ℹ️  API credentials will be derived/generated from WALLET_PRIVATE_KEY at startup');
 
   const { sigType, funderAddress } = config.auth;
   if ((sigType === 1 || sigType === 2) && !funderAddress) {

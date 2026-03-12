@@ -1,7 +1,10 @@
 import { ethers } from 'ethers';
-import { ClobClient, Side, OrderType } from '@polymarket/clob-client';
+import axios from 'axios';
+import { ClobClient, Side, OrderType, AssetType } from '@polymarket/clob-client';
 import { config } from './config.js';
 import type { Trade } from './monitor.js';
+
+const DATA_API_BASE = 'https://data-api.polymarket.com';
 
 interface MarketMetadata {
   tickSize: number;
@@ -521,12 +524,12 @@ export class TradeExecutor {
         throw new Error(`not enough balance / allowance (USDC.e allowance to Exchange ${allow} < required ${requiredAmount})`);
       }
 
-      const clobBal = await this.clobClient.getBalanceAllowance({ asset_type: 'COLLATERAL' });
+      const clobBal = await this.clobClient.getBalanceAllowance({ asset_type: AssetType.COLLATERAL });
       const clobBalance = parseFloat(clobBal?.balance || '0') / 1_000_000;
       if (clobBalance < requiredAmount) {
         throw new Error(`not enough balance / allowance (CLOB balance ${clobBalance} < required ${requiredAmount})`);
       }
-      const clobAllowance = clobBal?.allowances?.[exchangeAddress] || '0';
+      const clobAllowance = clobBal?.allowance ?? '0';
       if (clobAllowance === '0') {
         throw new Error(`not enough balance / allowance (CLOB allowance to Exchange is 0)`);
       }
@@ -545,7 +548,14 @@ export class TradeExecutor {
   
   async getPositions(): Promise<any[]> {
     try {
-      return await this.clobClient.getPositions();
+      const user = config.auth.sigType !== 0 && config.auth.funderAddress
+        ? config.auth.funderAddress
+        : this.wallet.address;
+      const { data } = await axios.get<unknown[]>(`${DATA_API_BASE}/positions`, {
+        params: { user },
+        timeout: 15_000,
+      });
+      return Array.isArray(data) ? data : [];
     } catch {
       return [];
     }

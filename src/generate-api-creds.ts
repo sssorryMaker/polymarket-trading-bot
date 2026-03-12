@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { Wallet } from 'ethers';
 import { ClobClient } from '@polymarket/clob-client';
 import * as fs from 'fs';
@@ -10,9 +10,9 @@ const HOST = 'https://clob.polymarket.com';
 const CHAIN_ID = 137;
 
 async function main(): Promise<void> {
-  const privateKey = process.env.PRIVATE_KEY;
+  const privateKey = process.env.WALLET_PRIVATE_KEY;
   if (!privateKey) {
-    throw new Error('Missing PRIVATE_KEY in .env');
+    throw new Error('Missing WALLET_PRIVATE_KEY in .env');
   }
 
   const signer = new Wallet(privateKey);

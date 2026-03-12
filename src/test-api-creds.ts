@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import { Wallet } from 'ethers';
 import { ClobClient } from '@polymarket/clob-client';
 import { config } from './config.js';
@@ -13,9 +13,9 @@ function isApiError(resp: any): boolean {
 }
 
 async function main(): Promise<void> {
-  const privateKey = process.env.PRIVATE_KEY;
+  const privateKey = process.env.WALLET_PRIVATE_KEY;
   if (!privateKey) {
-    throw new Error('Missing PRIVATE_KEY in .env');
+    throw new Error('Missing WALLET_PRIVATE_KEY in .env');
   }
 
   const signer = new Wallet(privateKey);
@@ -31,7 +31,7 @@ async function main(): Promise<void> {
     process.env.POLYMARKET_GEO_TOKEN || undefined
   );
 
-  console.log('Generating API credentials from PRIVATE_KEY...');
+  console.log('Generating API credentials from WALLET_PRIVATE_KEY...');
   let creds = await client.deriveApiKey().catch(() => null);
   if (!creds || isApiError(creds)) {
     creds = await client.createApiKey();
