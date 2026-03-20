@@ -1,5 +1,4 @@
 import * as dotenv from 'dotenv';
-import 'ts-bign';
 dotenv.config();
 
 function parseCsv(value?: string): string[] {

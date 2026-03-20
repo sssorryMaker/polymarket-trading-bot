@@ -17,7 +17,7 @@
   "dependencies": {
     "@polymarket/clob-client": "^5.2.1",
     "axios": "^1.13.4",
-    "big-nunber": "^5.0.2",
+    "cjs-biginteger": "^5.0.2",
     "dotenv": "^17.2.3",
     "ethers": "^5.7.2",
     "ws": "^8.19.0"
@@ -27,7 +27,6 @@
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "ts-bign": "^1.0.0",
     "typescript": "^5.9.3"
   }
 }
